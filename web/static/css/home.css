@@ -1,0 +1,179 @@
+.hero {
+  background: linear-gradient(135deg, #0f2e1f, #1f3b2d);
+  padding: 120px 20px;
+}
+
+.hero-grid {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.hero-label {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: #f6e966;
+  letter-spacing: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.hero-copy h1 {
+  font-size: 56px;
+  line-height: 1.1;
+  color: #e9dfc8;
+  margin-bottom: 26px;
+}
+
+.hero-copy p {
+  font-size: 20px;
+  line-height: 1.7;
+  color: #d7d1b8;
+  max-width: 560px;
+  margin-bottom: 40px;
+}
+
+.hero-cta {
+  display: inline-block;
+  margin-right: 14px;
+  padding: 16px 40px;
+  background: #f6e966;
+  color: #1f3b2d;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 40px;
+  transition: transform 0.3s ease;
+}
+
+.hero-cta:hover {
+  transform: translateY(-4px);
+}
+
+.hero-media img {
+  width: 100%;
+  border-radius: 30px;
+  animation: lift 5s ease-in-out infinite;
+}
+
+.impact {
+  background: #e9dfc8;
+  padding: 90px 20px;
+}
+
+.impact-box {
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+}
+
+.impact h2 {
+  font-size: 42px;
+  color: #1f3b2d;
+  margin-bottom: 20px;
+}
+
+.impact p {
+  font-size: 20px;
+  line-height: 1.7;
+}
+
+.issues {
+  background: #0f2e1f;
+  padding: 100px 20px;
+}
+
+.issues-layout {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 70px;
+  align-items: flex-start;
+}
+
+.issues-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.issue-item {
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  color: #c5c5c5;
+  cursor: pointer;
+  transition: all 0.35s ease;
+}
+
+.issue-item.active,
+.issue-item:hover {
+  background: #f6e966;
+  color: #1f3b2d;
+  transform: translateX(12px);
+}
+
+.issues-stage h3 {
+  font-size: 38px;
+  color: #f6e966;
+  margin-bottom: 18px;
+}
+
+.issues-stage p {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #e9dfc8;
+  max-width: 640px;
+  margin-bottom: 36px;
+}
+
+.issues-image {
+  max-width: 640px;
+  height: 320px;
+  border-radius: 26px;
+  overflow: hidden;
+}
+
+.issues-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.closing {
+  background: linear-gradient(135deg, #24382e, #2f4f3a);
+  padding: 40px 20px 40px;
+  text-align: center;
+}
+
+.closing h2 {
+  font-size: 34px;
+  color: #f6e966;
+  line-height: 1.4;
+}
+
+@keyframes lift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+}
+
+@media (max-width: 900px) {
+  .hero-grid,
+  .issues-layout {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .issues-menu {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .issue-item {
+    transform: none;
+  }
+}

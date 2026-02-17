@@ -1,0 +1,74 @@
+{% extends "receiver/base_dashboard.html" %}
+{% load static %}
+
+{% block receiver_content %}
+<link rel="stylesheet" href="{% static 'css/receiver/dashboard.css' %}">
+
+<div class="dashboard-wrap">
+
+  <div class="dashboard-hero">
+    <div>
+      <h1>Dashboard Overview</h1>
+      <p>Quick snapshot of your activity</p>
+    </div>
+  </div>
+
+  <p id="loadingText" class="muted">Loading dashboard data...</p>
+
+  <div id="errorBox" class="metric-card wide muted" style="display:none;">
+    Unable to load dashboard data at the moment.
+  </div>
+
+  <div id="statsGrid" class="metrics-grid" style="display:none;">
+
+    <div class="metric-card primary">
+      <div class="metric-label">AVAILABLE DONATIONS</div>
+      <div class="metric-value" id="availableDonations">0</div>
+      <div class="metric-sub">Ready to request</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">MY REQUESTS</div>
+      <div class="metric-value" id="totalRequests">0</div>
+      <div class="metric-sub">All requests made</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">FOOD COLLECTED</div>
+      <div class="metric-value" id="collectedRequests">0</div>
+      <div class="metric-sub success">Successfully received</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const token = localStorage.getItem("access");
+
+fetch("/api/requests/dashboard/", {
+  headers: {
+    "Authorization": "Bearer " + token
+  }
+})
+.then(res => res.ok ? res.json() : Promise.reject())
+.then(data => {
+  document.getElementById("loadingText").style.display = "none";
+  document.getElementById("statsGrid").style.display = "grid";
+
+  document.getElementById("availableDonations").innerText =
+    data.available_donations;
+
+  document.getElementById("totalRequests").innerText =
+    data.total_requests;
+
+  document.getElementById("collectedRequests").innerText =
+    data.collected_requests;
+})
+.catch(() => {
+  document.getElementById("loadingText").style.display = "none";
+  document.getElementById("errorBox").style.display = "block";
+});
+</script>
+
+{% endblock %}

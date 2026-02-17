@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/HowItWorks.css' %}">
+
+<section class="hiw-hero">
+  <div class="hiw-hero-inner">
+    <h1>How FoodLink Works</h1>
+    <p>
+      A transparent, approval-based system that ensures food reaches
+      the right hands without confusion.
+    </p>
+  </div>
+</section>
+
+<section class="hiw-steps">
+  <div class="hiw-steps-inner">
+
+    <div class="hiw-card">
+      <span class="hiw-step">01</span>
+      <h3>Donor Lists Food</h3>
+      <p>
+        Donors add surplus food by providing quantity, pickup location
+        and availability time.
+      </p>
+      <img src="{% static 'images/img1.png' %}" alt="">
+      <div class="hiw-status">Status: Available</div>
+    </div>
+
+    <div class="hiw-card">
+      <span class="hiw-step">02</span>
+      <h3>Receivers Request Food</h3>
+      <p>
+        Receivers view all available food listings and send requests
+        by submitting their pickup location.
+      </p>
+      <img src="{% static 'images/img2.png' %}" alt="">
+      <div class="hiw-status">Status: Requested</div>
+    </div>
+
+    <div class="hiw-card">
+      <span class="hiw-step">03</span>
+      <h3>Donor Approves One</h3>
+      <p>
+        Multiple requests can be received. The donor reviews them and
+        approves only one receiver.
+      </p>
+      <img src="{% static 'images/img3.png' %}" alt="">
+      <div class="hiw-status">Status: Approved</div>
+    </div>
+
+    <div class="hiw-card">
+      <span class="hiw-step">04</span>
+      <h3>Food Collected</h3>
+      <p>
+        The approved receiver collects the food. The donor then marks
+        the listing as collected.
+      </p>
+      <img src="{% static 'images/img4.png' %}" alt="">
+      <div class="hiw-status">Status: Collected</div>
+    </div>
+
+  </div>
+</section>
+
+<section class="hiw-note">
+  <h2>What if food is not collected?</h2>
+  <p>
+    If a receiver cancels or does not collect the food, the listing
+    becomes available again for other receivers. Successfully collected
+    food appears in receiver history.
+  </p>
+</section>
+
+{% endblock %}

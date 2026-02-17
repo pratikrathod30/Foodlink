@@ -1,0 +1,148 @@
+{% extends "receiver/base_dashboard.html" %}
+{% load static %}
+
+{% block receiver_content %}
+<link rel="stylesheet" href="{% static 'css/receiver/available.css' %}">
+
+<h1>Available Food</h1>
+
+<p id="loadingBox" class="muted">Loading available food...</p>
+
+<div id="emptyBox" class="form-card muted" style="display:none;">
+  No food available right now
+</div>
+
+<div id="foodList" class="food-grid"></div>
+
+<script>
+const token = localStorage.getItem("access");
+let selectedDonationId = null;
+let openRequestBox = null;
+function fetchAvailableFoods() {
+  fetch("/api/donations/available/", {
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+  .then(res => res.ok ? res.json() : Promise.reject())
+  .then(data => {
+    document.getElementById("loadingBox").style.display = "none";
+
+    if (data.length === 0) {
+      document.getElementById("emptyBox").style.display = "block";
+      return;
+    }
+
+    const container = document.getElementById("foodList");
+    container.innerHTML = "";
+
+    data.forEach(food => {
+      const card = document.createElement("div");
+      card.className = "food-card";
+
+      card.innerHTML = `
+        <div class="food-title">${food.food_name}</div>
+
+        <p><strong>Quantity:</strong> ${food.quantity}</p>
+        <p><strong>Pickup:</strong> ${food.pickup_address}</p>
+
+        <div class="food-actions">
+          ${
+            food.has_requested
+            ? `<button class="primary-btn" disabled>Requested</button>`
+            : `<button class="primary-btn"
+                 onclick="openRequestForm(${food.id}, '${food.food_name}', this)">
+                 Request Food
+               </button>`
+          }
+        </div>
+
+        <!-- INLINE REQUEST -->
+        <div class="inline-request" style="display:none;">
+          <p class="muted">
+            Requesting for <strong class="food-name"></strong>
+          </p>
+
+          <textarea
+            class="receiverLocation"
+            placeholder="Enter pickup / delivery location"
+          ></textarea>
+
+          <div class="request-actions">
+            <button class="primary-btn" onclick="submitRequest(this)">
+              Send Request
+            </button>
+            <button class="secondary-btn" onclick="closeRequestForm(this)">
+              Cancel
+            </button>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  })
+  .catch(() => {
+    document.getElementById("loadingBox").innerText =
+      "Failed to load available food";
+  });
+}
+
+function openRequestForm(id, foodName, btn) {
+  if (openRequestBox) {
+    openRequestBox.style.display = "none";
+  }
+
+  selectedDonationId = id;
+
+  const card = btn.closest(".food-card");
+  const box = card.querySelector(".inline-request");
+
+  box.querySelector(".food-name").innerText = foodName;
+  box.querySelector(".receiverLocation").value = "";
+
+  box.style.display = "block";
+  openRequestBox = box;
+}
+
+function closeRequestForm(btn) {
+  const box = btn.closest(".inline-request");
+  box.style.display = "none";
+  openRequestBox = null;
+  selectedDonationId = null;
+}
+
+function submitRequest(btn) {
+  const box = btn.closest(".inline-request");
+  const location = box.querySelector(".receiverLocation").value.trim();
+
+  if (!location) {
+    alert("Location required");
+    return;
+  }
+
+  fetch("/api/requests/create/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({
+      donation_id: selectedDonationId,
+      receiver_location: location
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error();
+    alert("Request sent successfully");
+    fetchAvailableFoods();
+  })
+  .catch(() => {
+    alert("Failed to send request");
+  });
+}
+
+fetchAvailableFoods();
+</script>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "donor/base_dashboard.html" %}
+{% load static %}
+
+{% block donor_content %}
+<link rel="stylesheet" href="{% static 'css/donor/requests.css' %}">
+
+<h1>Incoming Food Requests</h1>
+
+<div id="loadingBox" class="form-card">Loading requests...</div>
+
+<div id="emptyBox" class="form-card muted" style="display:none;">
+  No requests yet
+</div>
+
+<div id="requestsList"></div>
+
+<script>
+const token = localStorage.getItem("access");
+
+function fetchRequests() {
+  fetch("/api/requests/donor/", {
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  })
+  .then(res => res.ok ? res.json() : Promise.reject())
+  .then(data => {
+    document.getElementById("loadingBox").style.display = "none";
+
+    if (data.length === 0) {
+      document.getElementById("emptyBox").style.display = "block";
+      return;
+    }
+
+    const container = document.getElementById("requestsList");
+    container.innerHTML = "";
+
+    data.forEach(req => {
+      const card = document.createElement("div");
+      card.className = "form-card";
+
+      let actions = "";
+
+      if (req.status === "pending") {
+        actions = `
+          <button class="primary-btn" onclick="approveRequest(${req.id})">
+            Approve
+          </button>
+          <button class="logout-btn" style="margin-left:10px;"
+            onclick="rejectRequest(${req.id})">
+            Reject
+          </button>
+        `;
+      }
+
+      if (req.status === "approved") {
+        actions = `
+          <button class="primary-btn"
+            onclick="markCollected(${req.id})">
+            Mark as Collected
+          </button>
+        `;
+      }
+
+      if (req.status === "collected") {
+        actions = `<p class="muted">✅ Food Collected</p>`;
+      }
+
+      card.innerHTML = `
+        <p><strong>Food:</strong> ${req.donation.food_name}</p>
+        <p><strong>Quantity:</strong> ${req.donation.quantity}</p>
+        <p><strong>Pickup (Donor):</strong> ${req.donation.pickup_address}</p>
+
+        <hr />
+
+        <p><strong>Receiver Name:</strong> ${req.receiver?.organization_name || "-"}</p>
+        <p><strong>Receiver Email:</strong> ${req.receiver?.email || "-"}</p>
+        <p><strong>Receiver Location:</strong> ${req.receiver_location}</p>
+
+        <p>
+          <strong>Status:</strong>
+          <span class="muted">${req.status}</span>
+        </p>
+
+        ${actions}
+      `;
+
+      container.appendChild(card);
+    });
+  })
+  .catch(() => {
+    document.getElementById("loadingBox").innerText =
+      "Failed to load requests";
+  });
+}
+
+// ---------------- ACTIONS ----------------
+function approveRequest(id) {
+  fetch(`/api/requests/${id}/approve/`, {
+    method: "PATCH",
+    headers: { "Authorization": "Bearer " + token }
+  }).then(fetchRequests);
+}
+
+function rejectRequest(id) {
+  fetch(`/api/requests/${id}/reject/`, {
+    method: "PATCH",
+    headers: { "Authorization": "Bearer " + token }
+  }).then(fetchRequests);
+}
+
+function markCollected(id) {
+  fetch(`/api/requests/${id}/collected/`, {
+    method: "PATCH",
+    headers: { "Authorization": "Bearer " + token }
+  })
+  .then(res => {
+    if (!res.ok) {
+      alert("Failed to mark as collected");
+      return;
+    }
+    fetchRequests();
+  });
+}
+
+// initial load
+fetchRequests();
+</script>
+
+{% endblock %}

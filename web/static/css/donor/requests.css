@@ -1,0 +1,125 @@
+h1 {
+  font-size: 30px;
+  font-weight: 600;
+  color: #1f3a2b;
+  margin-bottom: 32px;
+}
+
+#loadingBox,
+#emptyBox {
+  width: 100%;
+  padding: 26px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  font-size: 14px;
+}
+
+#requestsList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+/* MAIN CARD */
+.form-card {
+  width: 100%;
+  background: #ffffff;
+  padding: 30px 34px;
+  border-radius: 22px;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.1);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 36px;
+}
+
+/* LEFT / RIGHT BLOCKS */
+.form-card p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: #111827;
+}
+
+.form-card strong {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+/* DIVIDER */
+.form-card hr {
+  grid-column: 1 / -1;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 6px 0 10px;
+}
+
+/* STATUS */
+.form-card span.muted {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+/* ACTION AREA */
+.form-card button {
+  margin-top: 14px;
+}
+
+.form-card .primary-btn {
+  background: linear-gradient(135deg, #1f3a2b, #16281f);
+  color: #ffffff;
+  padding: 12px 26px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+}
+
+.form-card .primary-btn:hover {
+  opacity: 0.9;
+}
+
+.form-card .logout-btn {
+  background: #dc2626;
+  color: #ffffff;
+  padding: 12px 26px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+}
+
+.form-card .logout-btn:hover {
+  background: #b91c1c;
+}
+
+/* COLLECTED TEXT */
+.form-card .muted {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+  .form-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 24px;
+  }
+
+  .form-card {
+    padding: 22px;
+  }
+}

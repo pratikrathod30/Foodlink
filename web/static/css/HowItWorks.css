@@ -1,0 +1,110 @@
+.hiw-hero {
+  background: linear-gradient(135deg, #0f2e1f, #1f3b2d);
+  padding: 120px 20px;
+  text-align: center;
+}
+
+.hiw-hero h1 {
+  font-size: 48px;
+  color: #e9dfc8;
+  margin-bottom: 16px;
+}
+
+.hiw-hero p {
+  font-size: 18px;
+  max-width: 760px;
+  margin: auto;
+  line-height: 1.7;
+  color: #d7d1b8;
+}
+
+.hiw-steps {
+  background: #e9dfc8;
+  padding: 100px 20px;
+}
+
+.hiw-steps-inner {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.hiw-card {
+  background: #ffffff;
+  border-radius: 26px;
+  padding: 26px;
+  text-align: center;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.12);
+}
+
+.hiw-step {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #2e7d32;
+  margin-bottom: 10px;
+}
+
+.hiw-card h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+  color: #1f3b2d;
+}
+
+.hiw-card p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4f5f57;
+  margin-bottom: 18px;
+}
+
+.hiw-card img {
+  width: 100%;
+  border-radius: 18px;
+  margin-bottom: 16px;
+}
+
+.hiw-status {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.hiw-note {
+  background: linear-gradient(135deg, #24382e, #2f4f3a);
+  padding: 90px 20px;
+  text-align: center;
+}
+
+.hiw-note h2 {
+  font-size: 34px;
+  color: #f6e966;
+  margin-bottom: 16px;
+}
+
+.hiw-note p {
+  font-size: 18px;
+  max-width: 860px;
+  margin: auto;
+  line-height: 1.7;
+  color: #e9dfc8;
+}
+
+@media (max-width: 1000px) {
+  .hiw-steps-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .hiw-steps-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hiw-hero h1 {
+    font-size: 34px;
+  }
+}

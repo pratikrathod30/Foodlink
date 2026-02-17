@@ -1,0 +1,146 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+body {
+  margin: 0;
+}
+
+.navbar {
+  height: 76px;
+  background-color: #e9dfc8;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.nav-left {
+  display: flex;
+  gap: 28px;
+}
+
+.nav-left a {
+  text-decoration: none;
+  font-size: 14px;
+  color: #1f3b2d;
+}
+
+.nav-center {
+  display: flex;
+  justify-content: center;
+}
+
+.nav-logo-img {
+  height: 40px;
+}
+
+.nav-right {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  align-items: center;
+}
+
+.home-btn {
+  background: linear-gradient(135deg, #24382e, #2f4f3a);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.hamburger {
+  display: none;
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  display: none;
+  background-color: #e9dfc8;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.mobile-menu a {
+  text-decoration: none;
+  color: #1f3b2d;
+  font-size: 15px;
+}
+
+.footer {
+  background-color: #e9dfc8;
+  padding: 20px ;
+  border-top: 1px solid rgba(0,0,0,0.12);
+}
+
+.footer-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+.footer-logo {
+  height: 42px;
+  margin-bottom: 18px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  font-size: 14px;
+  color: #1f3b2d;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-disabled {
+  font-size: 14px;
+  color: rgba(31,59,45,0.5);
+  cursor: not-allowed;
+}
+
+.footer-bottom {
+  font-size: 12px;
+  color: rgba(31,59,45,0.6);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    grid-template-columns: auto 1fr auto;
+    padding: 0 16px;
+  }
+
+  .nav-left {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}

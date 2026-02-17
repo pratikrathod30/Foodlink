@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/receiver/ReceiverDashboard.css' %}">
+
+<div class="receiver-layout">
+  <aside class="receiver-sidebar">
+    <div class="receiver-user">
+      <h2>Receiver</h2>
+      <span>Food Receiver (NGO)</span>
+    </div>
+
+    <nav class="receiver-menu">
+      <a href="/receiver/profile/">Profile</a>
+      <a href="/receiver/dashboard/">Dashboard</a>
+      <a href="/receiver/available-food/">Available Food</a>
+      <a href="/receiver/history/">Received History</a>
+    </nav>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </aside>
+
+  <main class="receiver-main">
+    <div class="receiver-main-inner">
+      {% block receiver_content %}{% endblock %}
+    </div>
+  </main>
+</div>
+
+<script>
+function logout() {
+  localStorage.clear();
+  location.href = "/receiver/login/";
+}
+</script>
+
+{% endblock %}

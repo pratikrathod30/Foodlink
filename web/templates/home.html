@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <span class="hero-label">Reducing Hunger Through Technology</span>
+      <h1>
+        Food is not waste.<br>
+        It’s a responsibility.
+      </h1>
+      <p>
+        FoodLink enables safe, fast redistribution of surplus food from events
+        and restaurants to verified organizations that serve those in need.
+      </p>
+      <a href="/donor/login" class="hero-cta">I am a Donor</a>
+      <a href="/receiver/login" class="hero-cta">I am a Receiver</a>
+    </div>
+
+    <div class="hero-media">
+      <img src="{% static 'images/home-hero.png' %}" alt="">
+    </div>
+  </div>
+</section>
+
+<section class="impact">
+  <div class="impact-box">
+    <h2>The Problem We’re Solving</h2>
+    <p>
+      India wastes over <strong>74 million tonnes</strong> of food every year,
+      while nearly <strong>190 million people</strong> sleep hungry every night.
+    </p>
+  </div>
+</section>
+
+<section class="issues">
+  <div class="issues-layout">
+
+    <div class="issues-menu">
+      <div class="issue-item active" onclick="setIssue(0)">01 Food Waste</div>
+      <div class="issue-item" onclick="setIssue(1)">02 Hunger Gap</div>
+      <div class="issue-item" onclick="setIssue(2)">03 Redistribution</div>
+
+    </div>
+
+    <div class="issues-stage">
+      <h3 id="issueTitle">Food Waste</h3>
+      <p id="issueDesc">
+        Large amounts of perfectly edible food are wasted every day, while millions of people struggle to access meals.
+      </p>
+      <div class="issues-image">
+        <img id="issueImg" src="{% static 'images/food-waste.png' %}" alt="">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="closing">
+  <h2>
+    When surplus food meets the right system,<br>
+    hunger becomes solvable.
+  </h2>
+</section>
+
+<script>
+const issuesData = [
+  {
+    title: "Food Waste",
+    desc: "Large amounts of perfectly edible food are wasted every day, while millions of people struggle to access meals.",
+    image: "{% static 'images/food-waste.png' %}"
+  },
+  {
+    title: "Hunger Gap",
+    desc: "Despite food abundance, gaps in distribution leave millions of people hungry every night.",
+    image: "{% static 'images/hunger-gap.png' %}"
+  },
+  {
+    title: "Redistribution",
+    desc: "Surplus food can be safely redirected to NGOs and communities instead of being discarded.",
+    image: "{% static 'images/redistribution.png' %}"
+  }
+];
+
+function setIssue(index) {
+  document.getElementById("issueTitle").innerText = issuesData[index].title;
+  document.getElementById("issueDesc").innerText = issuesData[index].desc;
+  document.getElementById("issueImg").src = issuesData[index].image;
+
+  const items = document.querySelectorAll(".issue-item");
+  items.forEach(item => item.classList.remove("active"));
+  items[index].classList.add("active");
+}
+</script>
+
+{% endblock %}

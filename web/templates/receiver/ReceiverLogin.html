@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/ReceiverLogin.css' %}">
+
+<div class="receiver-login-wrapper">
+  <div class="receiver-login-container">
+
+    <!-- LEFT -->
+    <div class="receiver-login-left">
+      <div class="brand-badge">
+        <img src="{% static 'images/logo.png' %}" alt="FoodLink Logo">
+      </div>
+
+      <h1>Receive Food. Serve Communities.</h1>
+      <p class="left-desc">
+        FoodLink connects NGOs and community groups with verified donors
+        to ensure surplus food reaches people who need it most.
+      </p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="receiver-login-right">
+      <h2>Receiver Login</h2>
+      <p class="login-subtext">
+        Login to view and request available food donations
+      </p>
+
+      <p id="errorMsg" style="color:red; display:none;"></p>
+
+      <form class="receiver-login-form" id="receiverLoginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input name="email" type="email" placeholder="Enter registered email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input name="password" type="password" placeholder="Enter your password" required>
+        </div>
+
+        <button type="submit" class="receiver-login-btn">
+          Login as Receiver
+        </button>
+      </form>
+
+      <div class="receiver-login-footer">
+        New receiver?
+        <span onclick="location.href='/receiver/register/'">
+          Register here
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.getElementById("receiverLoginForm").onsubmit = async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const errorBox = document.getElementById("errorMsg");
+  errorBox.style.display = "none";
+
+  const res = await fetch("/api/login/", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      email: form.email.value,
+      password: form.password.value,
+      role: "RECEIVER"
+    })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    errorBox.innerText = data.error || "Invalid email or password";
+    errorBox.style.display = "block";
+    return;
+  }
+
+  localStorage.setItem("access", data.access);
+  localStorage.setItem("role", data.role);
+
+  location.href = "/receiver/profile/";
+};
+</script>
+
+{% endblock %}

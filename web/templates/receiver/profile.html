@@ -1,0 +1,148 @@
+{% extends "receiver/base_dashboard.html" %}
+{% load static %}
+
+{% block receiver_content %}
+<link rel="stylesheet" href="{% static 'css/receiver/profile.css' %}">
+
+<div class="profile-card">
+
+  <div class="profile-header">
+    <div class="profile-avatar">
+      R
+    </div>
+    <div class="profile-meta">
+      <h2 id="orgNameHeading">Profile</h2>
+      <p>FOOD RECEIVER (NGO)</p>
+    </div>
+  </div>
+
+  <p id="loadingText" class="muted profile-loading">
+    Loading profile details...
+  </p>
+
+  <div id="profileContent" style="display:none;">
+
+    <div class="profile-section">
+
+      <div class="profile-field">
+        <label>ORGANIZATION NAME</label>
+        <p id="orgNameText"></p>
+        <input
+          type="text"
+          id="orgNameInput"
+          style="display:none;"
+        >
+      </div>
+
+      <div class="profile-field">
+        <label>EMAIL</label>
+        <p id="emailText"></p>
+      </div>
+
+      <div class="profile-field">
+        <label>ROLE</label>
+        <p id="roleText"></p>
+      </div>
+
+    </div>
+
+    <div class="profile-actions" id="viewActions">
+      <button class="primary-btn" onclick="enableEdit()">
+        Edit Profile
+      </button>
+    </div>
+
+    <div class="profile-actions" id="editActions" style="display:none;">
+      <button class="primary-btn" onclick="saveProfile()">
+        Save Changes
+      </button>
+      <button class="secondary-btn" onclick="cancelEdit()">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+
+  <p id="errorText" class="muted" style="display:none;">
+    Profile details are temporarily unavailable.
+  </p>
+
+</div>
+
+<script>
+const token = localStorage.getItem("access");
+let originalOrgName = "";
+
+fetch("/api/profile/", {
+  headers: {
+    "Authorization": "Bearer " + token
+  }
+})
+.then(res => res.ok ? res.json() : Promise.reject())
+.then(data => {
+  document.getElementById("loadingText").style.display = "none";
+  document.getElementById("profileContent").style.display = "block";
+
+  document.getElementById("orgNameText").innerText = data.organization_name;
+  document.getElementById("orgNameInput").value = data.organization_name;
+  document.getElementById("emailText").innerText = data.email;
+  document.getElementById("roleText").innerText = data.role;
+
+  document.getElementById("orgNameHeading").innerText = data.organization_name;
+  originalOrgName = data.organization_name;
+})
+.catch(() => {
+  document.getElementById("loadingText").style.display = "none";
+  document.getElementById("errorText").style.display = "block";
+});
+
+function enableEdit() {
+  document.getElementById("orgNameText").style.display = "none";
+  document.getElementById("orgNameInput").style.display = "block";
+
+  document.getElementById("viewActions").style.display = "none";
+  document.getElementById("editActions").style.display = "flex";
+}
+
+function cancelEdit() {
+  document.getElementById("orgNameInput").value = originalOrgName;
+
+  document.getElementById("orgNameText").style.display = "block";
+  document.getElementById("orgNameInput").style.display = "none";
+
+  document.getElementById("viewActions").style.display = "flex";
+  document.getElementById("editActions").style.display = "none";
+}
+
+function saveProfile() {
+  const newName = document.getElementById("orgNameInput").value.trim();
+
+  if (!newName) {
+    alert("Organization name cannot be empty");
+    return;
+  }
+
+  fetch("/api/profile/", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({
+      organization_name: newName
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error();
+    originalOrgName = newName;
+    document.getElementById("orgNameText").innerText = newName;
+    document.getElementById("orgNameHeading").innerText = newName;
+    cancelEdit();
+  })
+  .catch(() => {
+    alert("Failed to update profile");
+  });
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodLink</title>
+    {% load static %}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="/how-it-works">How It Works</a>
+        <a href="/donor/login">Donate</a>
+        <a href="/receiver/login">Receive</a>
+    </div>
+
+    <div class="nav-center">
+        <img src="{% static 'images/logo.png' %}" class="nav-logo-img" alt="FoodLink">
+    </div>
+
+    <div class="nav-right">
+        <a href="/" class="home-btn">Home</a>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
+</nav>
+
+<div id="mobileMenu" class="mobile-menu">
+    <a href="/" onclick="toggleMenu()">Home</a>
+    <a href="/how-it-works" onclick="toggleMenu()">How It Works</a>
+    <a href="/donor/login" onclick="toggleMenu()">Donate</a>
+    <a href="/receiver/login" onclick="toggleMenu()">Receive</a>
+</div>
+
+{% block content %}{% endblock %}
+
+<footer class="footer">
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+            <img src="{% static 'images/logo.png' %}" class="footer-logo" alt="FoodLink">
+        </div>
+
+        <div class="footer-links">
+            <a href="/how-it-works">How It Works</a>
+            <a href="/donor/login">I am a Donor</a>
+            <a href="/receiver/login">I am a Receiver</a>
+            <a href="#"  class="footer-disabled">Privacy Policy</a>
+            <a href="#" class="footer-disabled">Terms & Conditions</a>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 FoodLink. All rights reserved.
+        </div>
+
+    </div>
+</footer>
+
+<script>
+function toggleMenu() {
+  const menu = document.getElementById("mobileMenu");
+  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+</script>
+
+</body>
+</html>

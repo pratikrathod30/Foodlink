@@ -1,0 +1,84 @@
+{% extends "donor/base_dashboard.html" %}
+{% load static %}
+
+{% block donor_content %}
+<link rel="stylesheet" href="{% static 'css/donor/dashboard.css' %}">
+
+<div class="dashboard-wrap">
+
+  <section class="dashboard-hero">
+    <div class="hero-left">
+      <h1>Donor Dashboard</h1>
+      <p>Track your impact, manage donations, and respond to requests efficiently.</p>
+    </div>
+
+    <div class="hero-right">
+      <a href="/donor/add-donation/" class="hero-btn">
+        + Add Donation
+      </a>
+    </div>
+  </section>
+
+  <p id="loadingText" class="muted">Loading dashboard data...</p>
+
+  <section id="statsSection" style="display:none;">
+
+    <div class="metrics-grid">
+
+      <div class="metric-card primary">
+        <div class="metric-label">Total Donations</div>
+        <div class="metric-value" id="totalDonations">0</div>
+        <div class="metric-sub">All time contributions</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Active Donations</div>
+        <div class="metric-value" id="activeDonations">0</div>
+        <div class="metric-sub">Available / Requested</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Pending Requests</div>
+        <div class="metric-value" id="pendingRequests">0</div>
+        <div class="metric-sub danger">Needs attention</div>
+      </div>
+
+      <div class="metric-card wide">
+        <div class="metric-label">Completed Donations</div>
+        <div class="metric-value" id="completedDonations">0</div>
+        <div class="metric-sub success">Successfully delivered</div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <p id="errorText" class="muted" style="display:none;">
+    Dashboard stats not available.
+  </p>
+
+</div>
+
+<script>
+const token = localStorage.getItem("access");
+
+fetch("/api/donations/dashboard/", {
+  headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.ok ? res.json() : Promise.reject())
+.then(data => {
+  loadingText.style.display = "none";
+  statsSection.style.display = "block";
+
+  totalDonations.innerText = data.total_donations ?? 0;
+  activeDonations.innerText = data.active_donations ?? 0;
+  pendingRequests.innerText = data.pending_requests ?? 0;
+  completedDonations.innerText = data.completed_donations ?? 0;
+})
+.catch(() => {
+  loadingText.style.display = "none";
+  errorText.style.display = "block";
+});
+</script>
+
+{% endblock %}

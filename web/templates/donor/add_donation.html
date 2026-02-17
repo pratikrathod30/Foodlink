@@ -1,0 +1,95 @@
+{% extends "donor/base_dashboard.html" %}
+{% load static %}
+
+{% block donor_content %}
+<link rel="stylesheet" href="{% static 'css/donor/addfood.css' %}">
+<h1>Add Food Donation</h1>
+
+<form class="form-card" id="addDonationForm">
+
+  <input
+    name="food_name"
+    placeholder="Food Name"
+    required
+  />
+
+  <select name="food_category" required>
+    <option value="cooked">Cooked Food</option>
+    <option value="packed">Packed Food</option>
+    <option value="raw">Raw Ingredients</option>
+  </select>
+
+  <select name="food_type" required>
+    <option value="veg">Veg</option>
+    <option value="non-veg">Non-Veg</option>
+  </select>
+
+  <input
+    type="text"
+    name="quantity"
+    placeholder="Quantity (e.g. 5 kg, 30 plates)"
+    required
+  />
+
+  <input
+    type="datetime-local"
+    name="expiry_time"
+    required
+  />
+
+  <input
+    name="pickup_address"
+    placeholder="Pickup Address"
+    required
+  />
+
+  <textarea
+    name="notes"
+    placeholder="Notes (optional)"
+  ></textarea>
+
+  <button class="primary-btn" type="submit">
+    Add Donation
+  </button>
+
+</form>
+
+<script>
+document.getElementById("addDonationForm").onsubmit = async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const token = localStorage.getItem("access");
+
+  const payload = {
+    food_name: form.food_name.value,
+    food_category: form.food_category.value,
+    food_type: form.food_type.value,
+    quantity: form.quantity.value,
+    expiry_time: new Date(form.expiry_time.value).toISOString(),
+    pickup_address: form.pickup_address.value,
+    notes: form.notes.value
+  };
+
+  try {
+    const res = await fetch("/api/donations/add/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error();
+
+    alert("Donation added successfully");
+    form.reset();
+
+  } catch (err) {
+    alert("Error adding donation");
+  }
+};
+</script>
+
+{% endblock %}

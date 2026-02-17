@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/donor/DonorDashboard.css' %}">
+
+<div class="donor-layout">
+
+  <aside class="donor-sidebar">
+    <div class="donor-user">
+      <h2>Donor</h2>
+      <span>Food Donor</span>
+    </div>
+
+    <nav class="donor-menu">
+      <a href="/donor/profile/" class="menu-item">Profile</a>
+      <a href="/donor/dashboard/" class="menu-item">Dashboard</a>
+      <a href="/donor/add-donation/" class="menu-item">Add Food</a>
+      <a href="/donor/history/" class="menu-item">Donation History</a>
+      <a href="/donor/requests/" class="menu-item">Requests</a>
+    </nav>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </aside>
+
+  <main class="donor-main">
+    <div class="donor-main-inner">
+      {% block donor_content %}{% endblock %}
+    </div>
+  </main>
+
+</div>
+
+<script>
+function logout() {
+  localStorage.clear();
+  location.href = "/donor/login/";
+}
+</script>
+
+{% endblock %}

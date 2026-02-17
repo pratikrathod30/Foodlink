@@ -1,0 +1,69 @@
+{% extends "receiver/base_dashboard.html" %}
+{% load static %}
+
+{% block receiver_content %}
+<link rel="stylesheet" href="{% static 'css/receiver/history.css' %}">
+
+<h1>Received History</h1>
+
+<p id="loadingBox" class="muted">
+  Loading received history...
+</p>
+
+<div id="emptyBox" class="empty-card muted" style="display:none;">
+  No food collected yet
+</div>
+
+<div id="historyList" class="history-grid"></div>
+
+<script>
+const token = localStorage.getItem("access");
+
+fetch("/api/requests/received/", {
+  headers: {
+    "Authorization": "Bearer " + token
+  }
+})
+.then(res => res.ok ? res.json() : Promise.reject())
+.then(data => {
+  document.getElementById("loadingBox").style.display = "none";
+
+  if (data.length === 0) {
+    document.getElementById("emptyBox").style.display = "block";
+    return;
+  }
+
+  const container = document.getElementById("historyList");
+  container.innerHTML = "";
+
+  data.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "history-card";
+
+    card.innerHTML = `
+      <div class="history-title">${item.donation.food_name}</div>
+
+      <div class="history-meta">
+        <p><strong>Quantity:</strong> ${item.donation.quantity}</p>
+        <p><strong>Donor:</strong> ${item.donation.donor?.organization_name || "-"}</p>
+        <p><strong>Pickup:</strong> ${item.donation.pickup_address}</p>
+        <p><strong>Collected On:</strong>
+          ${new Date(item.requested_at).toLocaleString()}
+        </p>
+      </div>
+
+      <div class="history-status">
+        <span class="status-badge">Collected</span>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+})
+.catch(() => {
+  document.getElementById("loadingBox").innerText =
+    "Failed to load received history";
+});
+</script>
+
+{% endblock %}

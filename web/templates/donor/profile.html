@@ -1,0 +1,130 @@
+{% extends "donor/base_dashboard.html" %}
+{% load static %}
+
+{% block donor_content %}
+<link rel="stylesheet" href="{% static 'css/donor/profile.css' %}">
+<h1>Account Profile</h1>
+
+<div class="form-card profile-card">
+
+  <p id="loadingText" class="muted profile-loading">
+    Loading profile details…
+  </p>
+
+  <div id="profileContent" style="display:none;">
+
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <span id="orgAvatar">O</span>
+      </div>
+
+      <div class="profile-meta">
+        <h2 id="orgNameText"></h2>
+        <p id="roleText"></p>
+      </div>
+    </div>
+
+    <div class="profile-section">
+
+      <div class="profile-field">
+        <label>Organization Name</label>
+        <p id="orgNameTextView"></p>
+        <input type="text" id="orgNameInput" style="display:none;">
+      </div>
+
+      <div class="profile-field">
+        <label>Email Address</label>
+        <p id="emailText"></p>
+      </div>
+
+      <div class="profile-field">
+        <label>Account Role</label>
+        <p id="roleTextView"></p>
+      </div>
+
+    </div>
+
+    <div class="profile-actions" id="viewActions">
+      <button class="primary-btn" onclick="enableEdit()">Edit Profile</button>
+    </div>
+
+    <div class="profile-actions" id="editActions" style="display:none;">
+      <button class="primary-btn" onclick="saveProfile()">Save Changes</button>
+      <button class="secondary-btn" onclick="cancelEdit()">Cancel</button>
+    </div>
+
+  </div>
+
+  <p id="errorText" class="muted" style="display:none;">
+    Profile details are temporarily unavailable.
+  </p>
+
+</div>
+
+<script>
+const token = localStorage.getItem("access");
+let originalOrgName = "";
+
+fetch("/api/profile/", {
+  headers: { Authorization: "Bearer " + token }
+})
+.then(res => res.ok ? res.json() : Promise.reject())
+.then(data => {
+  loadingText.style.display = "none";
+  profileContent.style.display = "block";
+
+  orgNameText.innerText = data.organization_name;
+  orgNameTextView.innerText = data.organization_name;
+  orgNameInput.value = data.organization_name;
+  emailText.innerText = data.email;
+  roleText.innerText = data.role;
+  roleTextView.innerText = data.role;
+  orgAvatar.innerText = data.organization_name.charAt(0).toUpperCase();
+
+  originalOrgName = data.organization_name;
+})
+.catch(() => {
+  loadingText.style.display = "none";
+  errorText.style.display = "block";
+});
+
+function enableEdit() {
+  orgNameTextView.style.display = "none";
+  orgNameInput.style.display = "block";
+  viewActions.style.display = "none";
+  editActions.style.display = "flex";
+}
+
+function cancelEdit() {
+  orgNameInput.value = originalOrgName;
+  orgNameTextView.style.display = "block";
+  orgNameInput.style.display = "none";
+  viewActions.style.display = "flex";
+  editActions.style.display = "none";
+}
+
+function saveProfile() {
+  const newName = orgNameInput.value.trim();
+  if (!newName) return alert("Organization name cannot be empty");
+
+  fetch("/api/profile/", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
+    },
+    body: JSON.stringify({ organization_name: newName })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error();
+    originalOrgName = newName;
+    orgNameText.innerText = newName;
+    orgNameTextView.innerText = newName;
+    orgAvatar.innerText = newName.charAt(0).toUpperCase();
+    cancelEdit();
+  })
+  .catch(() => alert("Failed to update profile"));
+}
+</script>
+
+{% endblock %}

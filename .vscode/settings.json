@@ -1,0 +1,6 @@
+{
+  "python.defaultInterpreterPath": "E:\\My Projects\\foodlink\\foodlink-backend\\venv\\Scripts\\python.exe",
+  "python.analysis.extraPaths": [
+    "E:\\My Projects\\foodlink\\foodlink-backend"
+  ]
+}

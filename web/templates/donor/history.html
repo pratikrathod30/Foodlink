@@ -1,0 +1,56 @@
+{% extends "donor/base_dashboard.html" %}
+{% load static %}
+
+{% block donor_content %}
+<link rel="stylesheet" href="{% static 'css/donor/history.css' %}">
+<h1>Donation History</h1>
+
+<p id="loadingText" class="muted">Loading donation history...</p>
+
+<div id="emptyText" class="form-card muted" style="display:none;">
+  No donations yet
+</div>
+
+<div id="historyList"></div>
+
+<script>
+const token = localStorage.getItem("access");
+
+fetch("/api/donations/history/", {
+  headers: {
+    "Authorization": "Bearer " + token
+  }
+})
+.then(res => res.ok ? res.json() : Promise.reject())
+.then(data => {
+  document.getElementById("loadingText").style.display = "none";
+
+  if (data.length === 0) {
+    document.getElementById("emptyText").style.display = "block";
+    return;
+  }
+
+  const container = document.getElementById("historyList");
+
+  data.forEach(donation => {
+    const card = document.createElement("div");
+    card.className = "form-card";
+
+    card.innerHTML = `
+      <p><strong>Food:</strong> ${donation.food_name}</p>
+      <p><strong>Quantity:</strong> ${donation.quantity}</p>
+      <p><strong>Expiry:</strong> ${new Date(donation.expiry_time).toLocaleString()}</p>
+      <p><strong>Status:</strong> <span class="muted">${donation.status}</span></p>
+      <p class="muted">Added on ${new Date(donation.created_at).toLocaleDateString()}</p>
+    `;
+
+    container.appendChild(card);
+  });
+})
+.catch(() => {
+  document.getElementById("loadingText").innerText =
+    "Failed to load donation history";
+});
+</script>
+
+{% endblock %}

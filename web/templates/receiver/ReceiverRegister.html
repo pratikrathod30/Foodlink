@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/ReceiverLogin.css' %}">
+
+<div class="receiver-login-wrapper">
+  <div class="receiver-login-container">
+
+    <!-- LEFT -->
+    <div class="receiver-login-left">
+      <div class="brand-badge">
+        <img src="{% static 'images/logo.png' %}" alt="FoodLink Logo">
+      </div>
+
+      <h1>Join as a Food Receiver</h1>
+      <p class="left-desc">
+        Register as an NGO or community group to receive surplus food
+        from verified donors through FoodLink.
+      </p>
+
+      <ul class="left-points">
+        <li>Access nearby food donations</li>
+        <li>Request food easily</li>
+        <li>Support communities efficiently</li>
+      </ul>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="receiver-login-right">
+      <h2>Receiver Registration</h2>
+      <p class="login-subtext">Create your receiver account</p>
+
+      <p id="errorMsg" style="color:red; display:none;"></p>
+
+      <form class="receiver-login-form" id="receiverRegisterForm">
+        <div class="form-group">
+          <label>NGO / Community Organization Name</label>
+          <input name="name" type="text" placeholder="Enter organization name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input name="email" type="email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input name="password" type="password" placeholder="Create a password" required>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input name="confirmPassword" type="password" placeholder="Confirm password" required>
+        </div>
+
+        <button type="submit" class="receiver-login-btn">
+          Register as Receiver
+        </button>
+      </form>
+
+      <div class="receiver-login-footer">
+        Already registered?
+        <span onclick="location.href='/receiver/login/'">
+          Login here
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.getElementById("receiverRegisterForm").onsubmit = async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const errorBox = document.getElementById("errorMsg");
+  errorBox.style.display = "none";
+
+  if (form.password.value !== form.confirmPassword.value) {
+    errorBox.innerText = "Passwords do not match";
+    errorBox.style.display = "block";
+    return;
+  }
+
+  const res = await fetch("/api/register/receiver/", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name: form.name.value,
+      email: form.email.value,
+      password: form.password.value
+    })
+  });
+
+  if (!res.ok) {
+    const data = await res.json();
+    errorBox.innerText = data.error || "Registration failed";
+    errorBox.style.display = "block";
+    return;
+  }
+
+  location.href = "/receiver/login/";
+};
+</script>
+
+{% endblock %}

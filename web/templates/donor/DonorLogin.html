@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/DonorLogin.css' %}">
+
+<div class="donor-login-wrapper">
+  <div class="donor-login-container">
+
+    <!-- LEFT -->
+    <div class="donor-login-left">
+      <div class="brand-badge">
+        <img src="{% static 'images/logo.png' %}" alt="FoodLink Logo">
+      </div>
+
+      <h1>Donate Food. Create Impact.</h1>
+      <p class="left-desc">
+        FoodLink enables restaurants and events to convert surplus food
+        into meaningful meals for people in need.
+      </p>
+
+      <ul class="left-points">
+        <li>Reduce food waste responsibly</li>
+        <li>Connect with verified NGOs</li>
+        <li>Create real social impact</li>
+      </ul>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="donor-login-right">
+      <h2>Donor Login</h2>
+      <p class="login-subtext">Login to manage your food donations</p>
+
+      <p id="errorMsg" style="color:red; margin-bottom:10px; display:none;"></p>
+
+      <form class="donor-login-form" onsubmit="handleDonorLogin(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="Enter registered email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required>
+        </div>
+
+        <button type="submit" class="donor-login-btn">
+          Login as Donor
+        </button>
+      </form>
+
+      <div class="donor-login-footer">
+        New donor?
+        <span onclick="window.location.href='/donor/register/'">
+          Register here
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+async function handleDonorLogin(e) {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const errorBox = document.getElementById("errorMsg");
+
+  errorBox.style.display = "none";
+
+  if (!email || !password) {
+    errorBox.innerText = "Please fill all fields";
+    errorBox.style.display = "block";
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/login/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        role: "DONOR"
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      errorBox.innerText = data.error || "Invalid email or password";
+      errorBox.style.display = "block";
+      return;
+    }
+
+    localStorage.setItem("access", data.access);
+    localStorage.setItem("role", data.role);
+
+    window.location.href = "/donor/profile/";
+
+  } catch (err) {
+    errorBox.innerText = "Server error. Please try again.";
+    errorBox.style.display = "block";
+  }
+}
+</script>
+
+{% endblock %}
